@@ -1,1 +1,4 @@
-/related_files
+related_files/
+.env
+__pycache__/
+venv/
