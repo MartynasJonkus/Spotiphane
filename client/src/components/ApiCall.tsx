@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios from "axios"
 
 export const generateLithophane = async (songLink: string) => {
   const response = await axios.post(
-    'http://localhost:5000/generate_lithophane',
+    "http://localhost:5000/generate_lithophane",
     {
       song_url: songLink,
       frame_width: 10,
@@ -11,8 +11,8 @@ export const generateLithophane = async (songLink: string) => {
       max_width: 100.0,
     },
     {
-      responseType: 'blob',
+      responseType: "blob",
     }
-  );
-  return window.URL.createObjectURL(new Blob([response.data]));
-};
+  )
+  return window.URL.createObjectURL(new Blob([response.data]))
+}
