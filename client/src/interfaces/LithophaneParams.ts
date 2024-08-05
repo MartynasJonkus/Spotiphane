@@ -1,8 +1,7 @@
 export interface LithophaneParams {
-    songLink: string
-    frameWidth: number
-    minThickness: number
-    maxThickness: number
-    maxWidth: number
-  }
-  
+  songLink: string
+  frameWidth: number
+  minThickness: number
+  maxThickness: number
+  maxWidth: number
+}
