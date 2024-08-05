@@ -1,14 +1,15 @@
 import axios from "axios"
+import { LithophaneParams } from "../interfaces/LithophaneParams"
 
-export const generateLithophane = async (songLink: string) => {
+export const generateLithophane = async (params: LithophaneParams) => {
   const response = await axios.post(
     "http://localhost:5000/generate_lithophane",
     {
-      song_url: songLink,
-      frame_width: 10,
-      min_thickness: 0.6,
-      max_thickness: 3.0,
-      max_width: 100.0,
+      song_url: params.songLink,
+      frame_width: params.frameWidth,
+      min_thickness: params.minThickness,
+      max_thickness: params.maxThickness,
+      max_width: params.maxWidth,
     },
     {
       responseType: "blob",
