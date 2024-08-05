@@ -61,11 +61,11 @@ const SceneHelpers = () => {
 
 const Viewer3D: React.FC<Viewer3DProps> = ({ stlUrl }) => {
   return (
-    <div className="w-1/2 flex flex-col mx-auto space-y-5 border">
+    <div className="w-full flex flex-col mx-auto space-y-5 border">
       {stlUrl && (
         <Canvas
           camera={{ position: [0, 40, 100], fov: 75 }}
-          style={{ background: "#333" }} // Optional: Set background color for better contrast
+          style={{ background: "#333" }}
         >
           <ambientLight intensity={0.3} />
           <directionalLight

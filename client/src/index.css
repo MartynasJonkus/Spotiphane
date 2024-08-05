@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input[type="text"],
+input[type="number"] {
+  @apply border rounded-md bg-white p-2 text-black border-gray-700;
+}
+
+button {
+  @apply border rounded-md bg-gray-600 p-2 text-white border-gray-700;
+}
+
+button:hover {
+  @apply bg-gray-700;
+}

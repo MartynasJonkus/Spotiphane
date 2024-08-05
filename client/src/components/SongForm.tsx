@@ -1,6 +1,9 @@
-// SongForm.tsx
 import React, { useState } from "react"
 import { generateLithophane } from "./ApiCall"
+import {
+  LithophaneParams,
+  defaultLithophaneParams,
+} from "../interfaces/LithophaneParams"
 
 interface SongFormProps {
   stlUrl: string | null
@@ -8,15 +11,22 @@ interface SongFormProps {
 }
 
 const SongForm: React.FC<SongFormProps> = ({ stlUrl, setStlUrl }) => {
-  const [songLink, setSongLink] = useState<string>("")
+  const [params, setParams] = useState<LithophaneParams>(
+    defaultLithophaneParams
+  )
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [showOptions, setShowOptions] = useState<boolean>(false)
 
-  const [frameWidth, setFrameWidth] = useState<number>(10)
-  const [minThickness, setMinThickness] = useState<number>(0.6)
-  const [maxThickness, setMaxThickness] = useState<number>(3.0)
-  const [maxWidth, setMaxWidth] = useState<number>(100.0)
+  const handleInputChange = (
+    key: keyof LithophaneParams,
+    value: string | number
+  ) => {
+    setParams((prevParams: LithophaneParams) => ({
+      ...prevParams,
+      [key]: typeof value === "number" ? value : parseFloat(value),
+    }))
+  }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -25,13 +35,7 @@ const SongForm: React.FC<SongFormProps> = ({ stlUrl, setStlUrl }) => {
     setStlUrl(null)
 
     try {
-      const url = await generateLithophane({
-        songLink,
-        frameWidth,
-        minThickness,
-        maxThickness,
-        maxWidth,
-      })
+      const url = await generateLithophane(params)
       setStlUrl(url)
     } catch (error) {
       if (
@@ -50,8 +54,8 @@ const SongForm: React.FC<SongFormProps> = ({ stlUrl, setStlUrl }) => {
   }
 
   return (
-    <div className="w-1/2 flex flex-col mx-auto space-y-5 px-5 border">
-      <h1 className="font-bold text-3xl text-center">Songphane generator</h1>
+    <div className="w-full flex flex-col mx-auto space-y-5 px-5">
+      <h1 className="font-bold text-3xl text-center">Songphane Generator</h1>
       <ol className="list-decimal list-inside">
         <li>Copy a song/album/playlist link from Spotify</li>
         <li>Paste it here</li>
@@ -61,61 +65,48 @@ const SongForm: React.FC<SongFormProps> = ({ stlUrl, setStlUrl }) => {
 
       <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
         <input
-          className="border rounded-md bg-white border-gray-700 p-2 text-black"
           type="text"
           placeholder="Paste Spotify song link here"
-          value={songLink}
-          onChange={(e) => setSongLink(e.target.value)}
+          value={params.songLink}
+          onChange={(e) => handleInputChange("songLink", e.target.value)}
         />
 
-        <button
-          type="button"
-          onClick={() => setShowOptions(!showOptions)}
-          className="border rounded-md bg-gray-600 border-gray-700 p-2"
-        >
+        <button type="button" onClick={() => setShowOptions(!showOptions)}>
           {showOptions ? "Hide Options" : "Show Options"}
         </button>
 
-        {showOptions && (
-          <div className="flex flex-col space-y-4">
-            <label>
-              Frame Width:
-              <input
-                type="number"
-                value={frameWidth}
-                onChange={(e) => setFrameWidth(parseFloat(e.target.value))}
-                className="border rounded-md p-2 ml-2"
-              />
-            </label>
-            <label>
-              Min Thickness:
-              <input
-                type="number"
-                value={minThickness}
-                onChange={(e) => setMinThickness(parseFloat(e.target.value))}
-                className="border rounded-md p-2 ml-2"
-              />
-            </label>
-            <label>
-              Max Thickness:
-              <input
-                type="number"
-                value={maxThickness}
-                onChange={(e) => setMaxThickness(parseFloat(e.target.value))}
-                className="border rounded-md p-2 ml-2"
-              />
-            </label>
-            <label>
-              Max Width:
-              <input
-                type="number"
-                value={maxWidth}
-                onChange={(e) => setMaxWidth(parseFloat(e.target.value))}
-                className="border rounded-md p-2 ml-2"
-              />
-            </label>
-          </div>
-        )}
+        <div className="grid lg:grid-cols-2 gap-x-4 gap-y-2">
+          {showOptions && (
+            <>
+              {Object.keys(params).map((key) => {
+                if (key !== "songLink") {
+                  return (
+                    <div
+                      key={key}
+                      className="flex flex-col sm:flex-row sm:items-center"
+                    >
+                      <label className="sm:w-1/3 sm:text-right pr-2">
+                        {key.charAt(0).toUpperCase() + key.slice(1)}:
+                      </label>
+                      <input
+                        type="number"
+                        value={params[key as keyof LithophaneParams]}
+                        onChange={(e) =>
+                          handleInputChange(
+                            key as keyof LithophaneParams,
+                            parseFloat(e.target.value)
+                          )
+                        }
+                        className="sm:w-2/3"
+                      />
+                    </div>
+                  )
+                }
+                return null
+              })}
+            </>
+          )}
+        </div>
 
         <button
           type="submit"
@@ -126,31 +117,6 @@ const SongForm: React.FC<SongFormProps> = ({ stlUrl, setStlUrl }) => {
         </button>
       </form>
 
-      {/* <input
-        className="border rounded-md bg-white border-gray-700 p-2 text-black"
-        type="text"
-        placeholder="Paste Spotify song link here"
-        value={songLink}
-        onChange={(e) => setSongLink(e.target.value)}
-      />
-
-      <div className="flex space-x-4">
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="border rounded-md bg-gray-600 border-gray-700 p-2"
-        >
-          {loading ? "Generating..." : "Generate Lithophane"}
-        </button>
-
-        <button
-          onClick={() => setShowOptions(!showOptions)}
-          className="border rounded-md bg-gray-600 border-gray-700 p-2"
-        >
-          {showOptions ? "Hide Options" : "Show Options"}
-        </button>
-      </div> */}
-
       {error && (
         <div>
           <p>Error generating lithophane: {error}</p>
@@ -159,9 +125,7 @@ const SongForm: React.FC<SongFormProps> = ({ stlUrl, setStlUrl }) => {
 
       {stlUrl && (
         <a href={stlUrl} download="lithophane.stl">
-          <button className="border rounded-md bg-gray-600 border-gray-700 p-2">
-            Download STL
-          </button>
+          <button>Download STL</button>
         </a>
       )}
     </div>

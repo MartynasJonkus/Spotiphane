@@ -6,7 +6,7 @@ const App: React.FC = () => {
   const [stlUrl, setStlUrl] = useState<string | null>(null)
 
   return (
-    <main className="h-screen flex bg-gray-800 text-gray-300 p-10 gap-10">
+    <main className="h-screen grid xl:grid-cols-2 bg-gray-800 text-gray-300 p-10">
       <SongForm stlUrl={stlUrl} setStlUrl={setStlUrl} />
       <Viewer3D stlUrl={stlUrl} />
     </main>
