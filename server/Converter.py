@@ -1,29 +1,29 @@
 import numpy as np
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageEnhance
 import trimesh
 
 
-def combine_images_with_frame(cover_art_image, spotify_code_image, frame_width):
-    cover_art_image = cover_art_image.convert('L')
-    spotify_code_image = spotify_code_image.convert('L')
+def combine_images_with_frame(cover_art_image, spotify_code_image, contrast_factor, frame_width, code_margin):
+    if spotify_code_image:
+        ratio = cover_art_image.width / spotify_code_image.width
+        height = int(spotify_code_image.height * ratio)
+        spotify_code_image = spotify_code_image.resize((cover_art_image.width, height))
 
-    # Resize additional image to match the width of the main image
-    ratio = cover_art_image.width / spotify_code_image.width
-    height = int(spotify_code_image.height * ratio)
-    spotify_code_image = spotify_code_image.resize((cover_art_image.width, height))
+        combined_height = cover_art_image.height + spotify_code_image.height
+        combined_image = Image.new('RGB', (cover_art_image.width, combined_height))
+        combined_image.paste(cover_art_image, (0, 0))
+        combined_image.paste(spotify_code_image, (0, cover_art_image.height + code_margin))
+    else:
+        combined_image = cover_art_image
+    
+    enhancer = ImageEnhance.Contrast(combined_image)
+    combined_image = enhancer.enhance(contrast_factor)
 
-    # Combine images vertically
-    combined_height = cover_art_image.height + spotify_code_image.height
-    combined_image = Image.new('L', (cover_art_image.width, combined_height))
-    combined_image.paste(cover_art_image, (0, 0))
-    combined_image.paste(spotify_code_image, (0, cover_art_image.height + 10))
+    full_image = combined_image.convert('L')
+    full_image = ImageOps.expand(full_image, border=frame_width, fill='black')
+    full_image = full_image.transpose(Image.FLIP_LEFT_RIGHT)
 
-    # Add black frame
-    framed_image = ImageOps.expand(combined_image, border=frame_width, fill='black')
-
-    framed_image = framed_image.transpose(Image.FLIP_LEFT_RIGHT)
-
-    return framed_image
+    return full_image
 
 
 def image_to_heightmap(image, min_thickness=0.6, max_thickness=3.0):

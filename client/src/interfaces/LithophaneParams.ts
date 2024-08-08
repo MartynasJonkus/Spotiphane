@@ -1,15 +1,21 @@
 export interface LithophaneParams {
   songLink: string
-  frameWidth: number
+  needsCode: boolean
+  maxWidth: number
+  contrastFactor: number
   minThickness: number
   maxThickness: number
-  maxWidth: number
+  frameWidth: number
+  codeMargin: number
 }
 
 export const defaultLithophaneParams: LithophaneParams = {
   songLink: "",
-  frameWidth: 10,
+  needsCode: true,
+  maxWidth: 100.0,
+  contrastFactor: 1.5,
   minThickness: 0.6,
   maxThickness: 3.0,
-  maxWidth: 100.0,
+  frameWidth: 10,
+  codeMargin: 10,
 }

@@ -11,14 +11,18 @@ CORS(app)
 def generate_lithophane():
     try:
         data = request.json
-        song_url = data['song_url']
-        min_thickness = float(data.get('min_thickness', 0.6))
-        max_thickness = float(data.get('max_thickness', 3.0))
-        max_width = float(data.get('max_width', 100.0))
-        frame_width = int(data['frame_width'])
 
-        cover_art_image, spotify_code_image = get_cover_art_and_code(song_url)
-        framed_image = combine_images_with_frame(cover_art_image, spotify_code_image, frame_width)
+        song_url = data.get('song_url')
+        needs_code = data.get('needs_code')
+        min_thickness = data.get('min_thickness')
+        max_thickness = data.get('max_thickness')
+        max_width = data.get('max_width')
+        contrast_factor = data.get('contrast_factor')
+        frame_width = data.get('frame_width')
+        code_margin = data.get('code_margin')
+
+        cover_art_image, spotify_code_image = get_cover_art_and_code(song_url, needs_code)
+        framed_image = combine_images_with_frame(cover_art_image, spotify_code_image, contrast_factor, frame_width, code_margin)
         heightmap = image_to_heightmap(framed_image, min_thickness, max_thickness)
         mesh = create_3d_model(heightmap, max_width)
 

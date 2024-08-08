@@ -20,13 +20,14 @@ const SongForm: React.FC<SongFormProps> = ({ stlUrl, setStlUrl }) => {
 
   const handleInputChange = (
     key: keyof LithophaneParams,
-    value: string | number
+    value: string | number | boolean
   ) => {
     setParams((prevParams: LithophaneParams) => ({
       ...prevParams,
-      [key]: typeof value === "number" ? value : parseFloat(value),
-    }))
-  }
+      [key]: key === "songLink" ? value as string : 
+             typeof value === 'boolean' ? value : parseFloat(value as string),
+    }));
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -71,6 +72,15 @@ const SongForm: React.FC<SongFormProps> = ({ stlUrl, setStlUrl }) => {
           onChange={(e) => handleInputChange("songLink", e.target.value)}
         />
 
+        <div>
+          <label>Add the Spotify code to the bottom of the image </label>
+          <input
+            type="checkbox"
+            checked={params.needsCode}
+            onChange={(e) => handleInputChange("needsCode", e.target.checked)}
+          />
+        </div>
+
         <button type="button" onClick={() => setShowOptions(!showOptions)}>
           {showOptions ? "Hide Options" : "Show Options"}
         </button>
@@ -79,7 +89,7 @@ const SongForm: React.FC<SongFormProps> = ({ stlUrl, setStlUrl }) => {
           {showOptions && (
             <>
               {Object.keys(params).map((key) => {
-                if (key !== "songLink") {
+                if (key !== "songLink" && key !== "needsCode") {
                   return (
                     <div
                       key={key}
@@ -90,7 +100,7 @@ const SongForm: React.FC<SongFormProps> = ({ stlUrl, setStlUrl }) => {
                       </label>
                       <input
                         type="number"
-                        value={params[key as keyof LithophaneParams]}
+                        value={params[key as keyof LithophaneParams] as number}
                         onChange={(e) =>
                           handleInputChange(
                             key as keyof LithophaneParams,

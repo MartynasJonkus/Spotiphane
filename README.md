@@ -8,3 +8,4 @@ Let the user choose to either use the spotify generator or upload a photo
 Validation on all inputs  
 Optimize the 3D viewer so it doesn't consume 100% GPU  
 Make the UI look pretty and intuitive
+Tooltips that explain the parameter when hovering over it

@@ -37,9 +37,7 @@ def download_image(url):
     img = Image.open(BytesIO(response.content))
     return img
 
-
-
-def get_cover_art_and_code(spotify_url):
+def get_cover_art_and_code(spotify_url, needs_code):
     token = get_spotify_token(client_id, client_secret)
     spotify_id = get_spotify_id(spotify_url)
     type = 'track'
@@ -67,9 +65,13 @@ def get_cover_art_and_code(spotify_url):
     else:
         raise ValueError("Cover art not found")
 
-    spotify_code_url = f'https://scannables.scdn.co/uri/plain/jpeg/000000/white/640/spotify:{type}:{spotify_id}'
-
     cover_art_image = download_image(cover_art_url)
-    spotify_code_image = download_image(spotify_code_url)
+
+    
+    if(needs_code):
+        spotify_code_url = f'https://scannables.scdn.co/uri/plain/jpeg/000000/white/640/spotify:{type}:{spotify_id}'
+        spotify_code_image = download_image(spotify_code_url)
+    else:
+        spotify_code_image = None
     
     return cover_art_image, spotify_code_image

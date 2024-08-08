@@ -6,10 +6,13 @@ export const generateLithophane = async (params: LithophaneParams) => {
     "http://localhost:5000/generate_lithophane",
     {
       song_url: params.songLink,
-      frame_width: params.frameWidth,
+      needs_code: params.needsCode,
+      max_width: params.maxWidth,
       min_thickness: params.minThickness,
       max_thickness: params.maxThickness,
-      max_width: params.maxWidth,
+      contrast_factor: params.contrastFactor,
+      frame_width: params.frameWidth,
+      code_margin: params.codeMargin,
     },
     {
       responseType: "blob",
