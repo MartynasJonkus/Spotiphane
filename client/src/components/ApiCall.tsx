@@ -1,9 +1,14 @@
 import axios from "axios"
 import { LithophaneParams } from "../interfaces/LithophaneParams"
 
+const backendURL =
+  window.location.hostname === "localhost"
+    ? import.meta.env.VITE_BACKEND_URL_LOCAL
+    : import.meta.env.VITE_BACKEND_URL_NETWORK
+
 export const generateLithophane = async (params: LithophaneParams) => {
   const response = await axios.post(
-    "http://localhost:5000/generate_lithophane",
+    `${backendURL}/generate_lithophane`,
     {
       song_url: params.songLink,
       needs_code: params.needsCode,

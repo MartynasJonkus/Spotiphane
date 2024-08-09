@@ -18,7 +18,7 @@ const Loader = () => {
 
 // Model Component
 const Model = ({ url }: { url: string }) => {
-  const geometry = useLoader(STLLoader, url)
+  const geometry = useLoader(STLLoader, url) as THREE.BufferGeometry
 
   // Center the geometry
   const center = new THREE.Box3().setFromObject(new THREE.Mesh(geometry))
@@ -66,6 +66,7 @@ const Viewer3D: React.FC<Viewer3DProps> = ({ stlUrl }) => {
         <Canvas
           camera={{ position: [0, 40, 100], fov: 75 }}
           style={{ background: "#333" }}
+          frameloop="demand"
         >
           <ambientLight intensity={0.3} />
           <directionalLight

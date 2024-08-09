@@ -24,10 +24,14 @@ const SongForm: React.FC<SongFormProps> = ({ stlUrl, setStlUrl }) => {
   ) => {
     setParams((prevParams: LithophaneParams) => ({
       ...prevParams,
-      [key]: key === "songLink" ? value as string : 
-             typeof value === 'boolean' ? value : parseFloat(value as string),
-    }));
-  };
+      [key]:
+        key === "songLink"
+          ? (value as string)
+          : typeof value === "boolean"
+            ? value
+            : parseFloat(value as string),
+    }))
+  }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
