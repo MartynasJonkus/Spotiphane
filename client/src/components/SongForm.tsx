@@ -4,6 +4,7 @@ import {
   LithophaneParams,
   defaultLithophaneParams,
 } from "../interfaces/LithophaneParams"
+import PhotoUploader from "./PhotoUploader"
 
 interface SongFormProps {
   stlUrl: string | null
@@ -61,37 +62,40 @@ const SongForm: React.FC<SongFormProps> = ({ stlUrl, setStlUrl }) => {
   return (
     <div className="w-full flex flex-col mx-auto space-y-5 px-5">
       <h1 className="font-bold text-3xl text-center">Songphane Generator</h1>
-      <ol className="list-decimal list-inside">
-        <li>Copy a song/album/playlist link from Spotify</li>
-        <li>Paste it here</li>
-        <li>Select parameters (if none specified, default values are used)</li>
-        <li>Download the 3D model!</li>
-      </ol>
 
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-        <input
-          type="text"
-          placeholder="Paste Spotify song link here"
-          value={params.songLink}
-          onChange={(e) => handleInputChange("songLink", e.target.value)}
-        />
+      <div>
+        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+          <div className="flex items-center space-x-4">
+            <div className="flex flex-col w-3/5">
+              <input
+                type="text"
+                placeholder="Paste Spotify song link here"
+                value={params.songLink}
+                onChange={(e) => handleInputChange("songLink", e.target.value)}
+                className="flex-grow"
+              />
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={params.needsCode}
+                  onChange={(e) =>
+                    handleInputChange("needsCode", e.target.checked)
+                  }
+                  className="mr-2"
+                />
+                Add the Spotify code to the bottom of the image
+              </label>
+            </div>
+            <p>Or</p>
+            <PhotoUploader />
+          </div>
 
-        <div>
-          <label>Add the Spotify code to the bottom of the image </label>
-          <input
-            type="checkbox"
-            checked={params.needsCode}
-            onChange={(e) => handleInputChange("needsCode", e.target.checked)}
-          />
-        </div>
+          <button type="button" onClick={() => setShowOptions(!showOptions)}>
+            {showOptions ? "Hide Options" : "Show Options"}
+          </button>
 
-        <button type="button" onClick={() => setShowOptions(!showOptions)}>
-          {showOptions ? "Hide Options" : "Show Options"}
-        </button>
-
-        <div className="grid lg:grid-cols-2 gap-x-4 gap-y-2">
           {showOptions && (
-            <>
+            <div className="grid lg:grid-cols-2 gap-x-4 gap-y-2">
               {Object.keys(params).map((key) => {
                 if (key !== "songLink" && key !== "needsCode") {
                   return (
@@ -118,18 +122,18 @@ const SongForm: React.FC<SongFormProps> = ({ stlUrl, setStlUrl }) => {
                 }
                 return null
               })}
-            </>
+            </div>
           )}
-        </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="border rounded-md bg-gray-600 border-gray-700 p-2"
-        >
-          {loading ? "Generating..." : "Generate Lithophane"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={loading}
+            className="border rounded-md bg-gray-600 border-gray-700 p-2"
+          >
+            {loading ? "Generating..." : "Generate Lithophane"}
+          </button>
+        </form>
+      </div>
 
       {error && (
         <div>
