@@ -3,30 +3,31 @@ from PIL import Image, ImageOps, ImageEnhance
 import trimesh
 
 
-def combine_images_with_frame(cover_art_image, spotify_code_image, contrast_factor, frame_width, code_margin):
-    if spotify_code_image:
-        ratio = cover_art_image.width / spotify_code_image.width
-        height = int(spotify_code_image.height * ratio)
-        spotify_code_image = spotify_code_image.resize((cover_art_image.width, height))
+def combine_images(cover_art_image, spotify_code_image, code_margin):
+    ratio = cover_art_image.width / spotify_code_image.width
+    height = int(spotify_code_image.height * ratio)
+    spotify_code_image = spotify_code_image.resize((cover_art_image.width, height))
 
-        combined_height = cover_art_image.height + spotify_code_image.height
-        combined_image = Image.new('RGB', (cover_art_image.width, combined_height))
-        combined_image.paste(cover_art_image, (0, 0))
-        combined_image.paste(spotify_code_image, (0, cover_art_image.height + code_margin))
-    else:
-        combined_image = cover_art_image
-    
-    enhancer = ImageEnhance.Contrast(combined_image)
-    combined_image = enhancer.enhance(contrast_factor)
+    combined_height = cover_art_image.height + spotify_code_image.height
+    combined_image = Image.new('RGB', (cover_art_image.width, combined_height))
+    combined_image.paste(cover_art_image, (0, 0))
+    combined_image.paste(spotify_code_image, (0, cover_art_image.height + code_margin))
 
-    full_image = combined_image.convert('L')
-    full_image = ImageOps.expand(full_image, border=frame_width, fill='black')
-    full_image = full_image.transpose(Image.FLIP_LEFT_RIGHT)
-
-    return full_image
+    return combined_image
 
 
-def image_to_heightmap(image, min_thickness=0.6, max_thickness=3.0):
+def frame_image(image, contrast_factor, frame_width):
+    enhancer = ImageEnhance.Contrast(image)
+    contrasted_image = enhancer.enhance(contrast_factor)
+
+    gray_image = contrasted_image.convert('L')
+    framed_image = ImageOps.expand(gray_image, border=frame_width, fill='black')
+    framed_image = framed_image.transpose(Image.FLIP_LEFT_RIGHT)
+
+    return framed_image
+
+
+def image_to_heightmap(image, min_thickness, max_thickness):
     image_array = np.array(image)
 
     min_pixel = image_array.min()
@@ -37,7 +38,7 @@ def image_to_heightmap(image, min_thickness=0.6, max_thickness=3.0):
     return heightmap
 
 
-def create_3d_model(heightmap, max_width=100.0):
+def create_3d_model(heightmap, max_width):
     rows, cols = heightmap.shape
     vertices = []
     faces = []
