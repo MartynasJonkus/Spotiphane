@@ -4,7 +4,7 @@ Enter a Spotify link of a song/album/playlist and generate a lithophane of the c
 Downloadable as an .stl file
 
 # To do:  
-Let the user choose to either use the spotify generator or upload a photo  
+Two tabs below the title for Spotiphane and just photo modes
 Validation on all inputs  
 Make the UI look pretty and intuitive  
 Tooltips that explain the parameter when hovering over it  
