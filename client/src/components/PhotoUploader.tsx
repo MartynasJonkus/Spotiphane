@@ -1,6 +1,10 @@
 import React, { useState } from "react"
 
-const PhotoUploader: React.FC = () => {
+interface PhotoUploaderProps {
+  onImageDataChange: (imageData: string) => void
+}
+
+const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onImageDataChange }) => {
   const [image, setImage] = useState<string | ArrayBuffer | null>(null)
   const [fileName, setFileName] = useState<string | null>(null)
 
@@ -9,7 +13,9 @@ const PhotoUploader: React.FC = () => {
     if (file) {
       const reader = new FileReader()
       reader.onloadend = () => {
-        setImage(reader.result)
+        const result = reader.result as string
+        setImage(result)
+        onImageDataChange(result)
       }
       reader.readAsDataURL(file)
       setFileName(file.name)
@@ -17,7 +23,7 @@ const PhotoUploader: React.FC = () => {
   }
 
   return (
-    <div className="relative rounded-lg bg-gray-100 w-[320px] h-[240px] mx-auto text-center">
+    <div className="relative rounded-lg bg-gray-100 w-full h-[400px] mx-auto text-center">
       <div className="relative w-full h-full">
         <div className="relative w-full h-full flex items-center justify-center">
           {image ? (

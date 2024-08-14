@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import SongForm from "./components/SongForm"
+import Forms from "./components/Forms"
 import Viewer3D from "./components/Viewer3D"
 
 const App: React.FC = () => {
@@ -7,7 +7,7 @@ const App: React.FC = () => {
 
   return (
     <main className="h-screen grid xl:grid-cols-2 bg-gray-800 text-gray-300 p-10">
-      <SongForm stlUrl={stlUrl} setStlUrl={setStlUrl} />
+      <Forms stlUrl={stlUrl} setStlUrl={setStlUrl} />
       <Viewer3D stlUrl={stlUrl} />
     </main>
   )

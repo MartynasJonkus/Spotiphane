@@ -26,6 +26,13 @@ def frame_image(image, contrast_factor, frame_width):
 
     return framed_image
 
+def adjust_image_resolution(image, max_width, pixels_per_mm):
+    target_resolution = max_width * pixels_per_mm
+    if image.width > target_resolution:
+        ratio = target_resolution / image.width
+        new_height = int(image.height * ratio)
+        image = image.resize((int(target_resolution), new_height))
+    return image
 
 def image_to_heightmap(image, min_thickness, max_thickness):
     image_array = np.array(image)

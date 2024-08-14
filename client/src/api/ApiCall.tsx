@@ -17,6 +17,7 @@ export const generateLithophane = async (params: LithophaneParams) => {
       min_thickness: params.minThickness,
       max_thickness: params.maxThickness,
       contrast_factor: params.contrastFactor,
+      pixels_per_mm: params.pixelsPerMilimeter,
       frame_width: params.frameWidth,
       code_margin: params.codeMargin,
     },
@@ -27,15 +28,18 @@ export const generateLithophane = async (params: LithophaneParams) => {
   return window.URL.createObjectURL(new Blob([response.data]))
 }
 
-export const generateLithophanePhoto = async (params: LithophanePhotoParams) => {
+export const generateLithophanePhoto = async (
+  params: LithophanePhotoParams
+) => {
   const response = await axios.post(
     `${backendURL}/generate_lithophane_photo`,
     {
-      image: params.image,
+      image_data: params.imageData,
       max_width: params.maxWidth,
       min_thickness: params.minThickness,
       max_thickness: params.maxThickness,
       contrast_factor: params.contrastFactor,
+      pixels_per_mm: params.pixelsPerMilimeter,
       frame_width: params.frameWidth,
     },
     {
