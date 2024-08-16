@@ -16,23 +16,23 @@ def combine_images(cover_art_image, spotify_code_image, code_margin):
     return combined_image
 
 
-def frame_image(image, contrast_factor, frame_width):
+def adjust_image(image, contrast_factor, frame_width, max_width, pixels_per_mm):
     enhancer = ImageEnhance.Contrast(image)
     contrasted_image = enhancer.enhance(contrast_factor)
-
     gray_image = contrasted_image.convert('L')
-    framed_image = ImageOps.expand(gray_image, border=frame_width, fill='black')
-    framed_image = framed_image.transpose(Image.FLIP_LEFT_RIGHT)
+    flipped_image = gray_image.transpose(Image.FLIP_LEFT_RIGHT)
 
-    return framed_image
+    frame_width_in_pixels = int(flipped_image.width * frame_width / (max_width - 2 * frame_width))
+    framed_image = ImageOps.expand(flipped_image, frame_width_in_pixels, 'black')
 
-def adjust_image_resolution(image, max_width, pixels_per_mm):
     target_resolution = max_width * pixels_per_mm
-    if image.width > target_resolution:
-        ratio = target_resolution / image.width
-        new_height = int(image.height * ratio)
-        image = image.resize((int(target_resolution), new_height))
-    return image
+    if framed_image.width > target_resolution:
+        ratio = target_resolution / framed_image.width
+        new_height = int(framed_image.height * ratio)
+        resized_image = framed_image.resize((int(target_resolution), new_height))
+    
+    return resized_image
+
 
 def image_to_heightmap(image, min_thickness, max_thickness):
     image_array = np.array(image)

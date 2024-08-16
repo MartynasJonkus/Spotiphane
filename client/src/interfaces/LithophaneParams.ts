@@ -18,6 +18,6 @@ export const defaultLithophaneParams: LithophaneParams = {
   pixelsPerMilimeter: 6,
   minThickness: 0.6,
   maxThickness: 3.0,
-  frameWidth: 10,
+  frameWidth: 3,
   codeMargin: 10,
 }
