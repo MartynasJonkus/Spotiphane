@@ -9,6 +9,7 @@ Inputs display the units of measurement (UI)
 Two tabs below the title (UI)
 Tooltips that explain the parameter when hovering over it  (UI)
 Add instructions how to get the development build running  (Documentation)
+Position the 3d mopdel vertically and shine a light behind
 
 # Done
 Let the user choose to do the spotify lithophane or an uploaded photo

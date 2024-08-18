@@ -7,10 +7,14 @@ input[type="number"] {
   @apply border rounded-md bg-white p-2 text-black border-gray-700;
 }
 
-button {
+.default-button {
   @apply border rounded-md bg-gray-600 p-2 text-white border-gray-700;
 }
 
-button:hover {
+.default-button:hover {
   @apply bg-gray-700;
+}
+
+.disabled-button {
+  @apply border rounded-md bg-gray-600 p-2 text-gray-400 border-gray-700 cursor-not-allowed;
 }

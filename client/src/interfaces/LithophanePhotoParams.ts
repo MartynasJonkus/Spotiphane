@@ -17,3 +17,12 @@ export const defaultLithophanePhotoParams: LithophanePhotoParams = {
   maxThickness: 3.0,
   frameWidth: 3,
 }
+
+export const minMaxLithophanePhoto = {
+  maxWidth: { min: 1, max: 500 },
+  contrastFactor: { min: 1, max: 10 },
+  pixelsPerMilimeter: { min: 1, max: 10 },
+  minThickness: { min: 0.1, max: 10 },
+  maxThickness: { min: 1, max: 10 },
+  frameWidth: { min: 0, max: 100 },
+}

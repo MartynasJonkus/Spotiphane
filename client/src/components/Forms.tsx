@@ -11,31 +11,46 @@ const Forms: React.FC<FormProps> = ({ stlUrl, setStlUrl }) => {
   const [activeTab, setActiveTab] = useState<"spotify" | "photo">("spotify")
 
   return (
-    <div className="w-full flex flex-col mx-auto space-y-5 px-5">
+    <div className="w-full h-full flex flex-col gap-5">
       <h1 className="font-bold text-3xl text-center">Songphane Generator</h1>
-      <div className="flex space-x-4 justify-center">
+      <div className="flex">
         <button
-          className={`${
-            activeTab === "spotify" ? "border-b-2 border-blue-500" : ""
-          }`}
+          className={`flex-1 py-2 transition-colors duration-300 ease-in-out  ${
+            activeTab === "spotify"
+              ? "relative after:content-[''] after:absolute after:w-full after:h-1 after:bg-blue-500 after:left-0 after:bottom-0"
+              : ""
+          } hover:bg-gray-700`}
           onClick={() => setActiveTab("spotify")}
         >
           Spotify
         </button>
         <button
-          className={`${
-            activeTab === "photo" ? "border-b-2 border-blue-500" : ""
-          }`}
+          className={`flex-1 py-2 transition-colors duration-300 ease-in-out  ${
+            activeTab === "photo"
+              ? "relative after:content-[''] after:absolute after:w-full after:h-1 after:bg-blue-500 after:left-0 after:bottom-0"
+              : ""
+          } hover:bg-gray-700`}
           onClick={() => setActiveTab("photo")}
         >
           Photo
         </button>
       </div>
-      {activeTab === "spotify" ? (
-        <SpotifyForm stlUrl={stlUrl} setStlUrl={setStlUrl} />
-      ) : (
-        <PhotoForm stlUrl={stlUrl} setStlUrl={setStlUrl} />
-      )}
+      <div className="flex-grow">
+        {activeTab === "spotify" ? (
+          <SpotifyForm setStlUrl={setStlUrl} />
+        ) : (
+          <PhotoForm setStlUrl={setStlUrl} />
+        )}
+      </div>
+      <div className="flex justify-end">
+        {stlUrl ? (
+          <a href={stlUrl} download="lithophane.stl">
+            <button className="default-button">Download STL</button>
+          </a>
+        ) : (
+          <button className="disabled-button">Download STL</button>
+        )}
+      </div>
     </div>
   )
 }

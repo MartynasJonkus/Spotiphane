@@ -23,7 +23,7 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onImageDataChange }) => {
   }
 
   return (
-    <div className="relative rounded-lg bg-gray-100 w-full h-[400px] mx-auto text-center">
+    <div className="relative rounded-lg bg-gray-100 w-full h-[10rem] mx-auto text-center">
       <div className="relative w-full h-full">
         <div className="relative w-full h-full flex items-center justify-center">
           {image ? (

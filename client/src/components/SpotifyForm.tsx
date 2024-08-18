@@ -6,11 +6,10 @@ import {
 } from "../interfaces/LithophaneParams"
 
 interface SpotifyFormProps {
-  stlUrl: string | null
   setStlUrl: (url: string | null) => void
 }
 
-const SpotifyForm: React.FC<SpotifyFormProps> = ({ stlUrl, setStlUrl }) => {
+const SpotifyForm: React.FC<SpotifyFormProps> = ({ setStlUrl }) => {
   const [params, setParams] = useState<LithophaneParams>(
     defaultLithophaneParams
   )
@@ -79,7 +78,11 @@ const SpotifyForm: React.FC<SpotifyFormProps> = ({ stlUrl, setStlUrl }) => {
         </label>
       </div>
 
-      <button type="button" onClick={() => setShowOptions(!showOptions)}>
+      <button
+        className="default-button"
+        type="button"
+        onClick={() => setShowOptions(!showOptions)}
+      >
         {showOptions ? "Hide Options" : "Show Options"}
       </button>
 
@@ -114,11 +117,7 @@ const SpotifyForm: React.FC<SpotifyFormProps> = ({ stlUrl, setStlUrl }) => {
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="border rounded-md bg-gray-600 border-gray-700 p-2"
-      >
+      <button type="submit" disabled={loading} className="default-button">
         {loading ? "Generating..." : "Generate Lithophane"}
       </button>
 
@@ -126,12 +125,6 @@ const SpotifyForm: React.FC<SpotifyFormProps> = ({ stlUrl, setStlUrl }) => {
         <div>
           <p>Error generating lithophane: {error}</p>
         </div>
-      )}
-
-      {stlUrl && (
-        <a href={stlUrl} download="lithophane.stl">
-          <button>Download STL</button>
-        </a>
       )}
     </form>
   )
