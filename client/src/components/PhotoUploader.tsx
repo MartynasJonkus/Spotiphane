@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
 interface PhotoUploaderProps {
   onImageDataChange: (imageData: string) => void
 }
@@ -11,6 +13,14 @@ const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onImageDataChange }) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
+      if (!file.type.startsWith("image/")) {
+        alert("Please upload a valid image file.")
+        return
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        alert("File size exceeds the maximum limit of 10MB.");
+        return;
+      }
       const reader = new FileReader()
       reader.onloadend = () => {
         const result = reader.result as string

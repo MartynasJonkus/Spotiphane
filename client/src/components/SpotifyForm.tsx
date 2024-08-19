@@ -29,11 +29,23 @@ const SpotifyForm: React.FC<SpotifyFormProps> = ({ setStlUrl }) => {
     }))
   }
 
+  const isValidSpotifyLink = (link: string) => {
+    const spotifyLinkRegex =
+      /^(spotify:(track|playlist|album):|https:\/\/[a-z]+\.spotify\.com\/(track|playlist|album)\/)[a-zA-Z0-9]+(\?.*)?$/
+    return spotifyLinkRegex.test(link)
+  }
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     setLoading(true)
     setError(null)
     setStlUrl(null)
+
+    if (!isValidSpotifyLink(params.songLink)) {
+      setError("Please enter a valid Spotify song link")
+      setLoading(false)
+      return
+    }
 
     try {
       const url = await generateLithophane(params)
@@ -61,6 +73,7 @@ const SpotifyForm: React.FC<SpotifyFormProps> = ({ setStlUrl }) => {
           <input
             type="text"
             placeholder="Paste Spotify song link here"
+            maxLength={80}
             value={params.songLink}
             onChange={(e) => handleOtherChange("songLink", e.target.value)}
             className="flex-grow"

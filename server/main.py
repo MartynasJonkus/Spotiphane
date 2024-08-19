@@ -6,6 +6,7 @@ import re
 from PIL import Image, UnidentifiedImageError
 from SpotifyApi import get_cover_art_and_code
 from Converter import combine_images, adjust_image, image_to_heightmap, create_3d_model
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 CORS(app)
@@ -26,6 +27,9 @@ def generate_lithophane():
         frame_width = data.get('frame_width')
         code_margin = data.get('code_margin')
 
+        parsed_url = urlparse(song_url)
+        if parsed_url.scheme not in ('http', 'https'):
+            raise ValueError("Invalid URL scheme")
         
         cover_art_image, spotify_code_image = get_cover_art_and_code(song_url, needs_code)
         print("Images acquired")
