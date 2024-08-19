@@ -2,8 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-input[type="text"],
-input[type="number"] {
+input[type="text"] {
   @apply border rounded-md bg-white p-2 text-black border-gray-700;
 }
 

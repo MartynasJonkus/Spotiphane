@@ -14,6 +14,7 @@ CORS(app)
 def generate_lithophane():
     try:
         data = request.json
+        print("data", data)
 
         song_url = data.get('song_url')
         needs_code = data.get('needs_code')
@@ -27,15 +28,22 @@ def generate_lithophane():
 
         
         cover_art_image, spotify_code_image = get_cover_art_and_code(song_url, needs_code)
+        print("Images acquired")
         
         if needs_code:
             combined_image = combine_images(cover_art_image, spotify_code_image, code_margin)
         else:
             combined_image = cover_art_image
+        print("Images combined")
 
         adjusted_image = adjust_image(combined_image, contrast_factor, frame_width, max_width, pixels_per_mm)
+        print("Image adjusted")
+
         heightmap = image_to_heightmap(adjusted_image, min_thickness, max_thickness)
+        print("Image converted to heightmap")
+
         mesh = create_3d_model(heightmap, max_width)
+        print("3D model created")
 
         stl_io = io.BytesIO()
         mesh.export(stl_io, file_type='stl')
@@ -50,6 +58,7 @@ def generate_lithophane():
 def generate_lithophane_photo():
     try:
         data = request.json
+        print("data", data)
 
         image_data = data.get('image_data')
         min_thickness = data.get('min_thickness')
@@ -61,10 +70,12 @@ def generate_lithophane_photo():
 
         if image_data.startswith('data:image/'):
             image_data = re.sub(r'data:image/.+;base64,', '', image_data)
+        print("Removed image prefix")
 
         image_bytes = base64.b64decode(image_data)
         if len(image_bytes) == 0:
             raise ValueError("Decoded image bytes are empty.")
+        print("Image bytes decoded")
 
         try:
             image = Image.open(io.BytesIO(image_bytes))
@@ -74,11 +85,16 @@ def generate_lithophane_photo():
             raise ValueError("The image cannot be identified.")
         except Exception as e:
             raise ValueError(f"Error opening image: {e}")
-
+        print("Image opened")
 
         adjusted_image = adjust_image(image, contrast_factor, frame_width, max_width, pixels_per_mm)
+        print("Image adjusted")
+
         heightmap = image_to_heightmap(adjusted_image, min_thickness, max_thickness)
+        print("Image converted to heightmap")
+
         mesh = create_3d_model(heightmap, max_width)
+        print("3D model created")
 
         stl_io = io.BytesIO()
         mesh.export(stl_io, file_type='stl')

@@ -1,6 +1,5 @@
 import axios from "axios"
 import { LithophaneParams } from "../interfaces/LithophaneParams"
-import { LithophanePhotoParams } from "../interfaces/LithophanePhotoParams"
 
 const backendURL =
   window.location.hostname === "localhost"
@@ -28,9 +27,7 @@ export const generateLithophane = async (params: LithophaneParams) => {
   return window.URL.createObjectURL(new Blob([response.data]))
 }
 
-export const generateLithophanePhoto = async (
-  params: LithophanePhotoParams
-) => {
+export const generateLithophanePhoto = async (params: LithophaneParams) => {
   const response = await axios.post(
     `${backendURL}/generate_lithophane_photo`,
     {

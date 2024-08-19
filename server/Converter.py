@@ -21,17 +21,25 @@ def adjust_image(image, contrast_factor, frame_width, max_width, pixels_per_mm):
     contrasted_image = enhancer.enhance(contrast_factor)
     gray_image = contrasted_image.convert('L')
     flipped_image = gray_image.transpose(Image.FLIP_LEFT_RIGHT)
+    print("--Image contrasted, greyed and flipped")
 
     frame_width_in_pixels = int(flipped_image.width * frame_width / (max_width - 2 * frame_width))
+    print("--Frame width in pixels:", frame_width_in_pixels)
     framed_image = ImageOps.expand(flipped_image, frame_width_in_pixels, 'black')
+    print("--Image framed")
 
     target_resolution = max_width * pixels_per_mm
+    print("--Target resolution:", target_resolution)
+    print("--Actual resolution:", framed_image.width)
+
     if framed_image.width > target_resolution:
         ratio = target_resolution / framed_image.width
         new_height = int(framed_image.height * ratio)
-        resized_image = framed_image.resize((int(target_resolution), new_height))
+        framed_image = framed_image.resize((int(target_resolution), new_height))
+        print("--Image resized")
     
-    return resized_image
+    print("--Returning adjusted image")
+    return framed_image
 
 
 def image_to_heightmap(image, min_thickness, max_thickness):

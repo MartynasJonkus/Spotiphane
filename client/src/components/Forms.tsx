@@ -35,7 +35,7 @@ const Forms: React.FC<FormProps> = ({ stlUrl, setStlUrl }) => {
           Photo
         </button>
       </div>
-      <div className="flex-grow">
+      <div className="sm:flex-grow">
         {activeTab === "spotify" ? (
           <SpotifyForm setStlUrl={setStlUrl} />
         ) : (
@@ -48,7 +48,9 @@ const Forms: React.FC<FormProps> = ({ stlUrl, setStlUrl }) => {
             <button className="default-button">Download STL</button>
           </a>
         ) : (
-          <button className="disabled-button">Download STL</button>
+          <button className="disabled-button" disabled>
+            Download STL
+          </button>
         )}
       </div>
     </div>

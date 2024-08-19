@@ -1,36 +1,26 @@
 import React, { useState } from "react"
 import { generateLithophanePhoto } from "../api/ApiCall"
 import {
-  LithophanePhotoParams,
-  defaultLithophanePhotoParams,
-  minMaxLithophanePhoto,
-} from "../interfaces/LithophanePhotoParams"
+  LithophaneParams,
+  defaultLithophaneParams,
+} from "../interfaces/LithophaneParams"
 import PhotoUploader from "./PhotoUploader"
+import OptionsDropdown from "./OptionsDropdown"
 
 interface PhotoFormProps {
   setStlUrl: (url: string | null) => void
 }
 
 const PhotoForm: React.FC<PhotoFormProps> = ({ setStlUrl }) => {
-  const [params, setParams] = useState<LithophanePhotoParams>(
-    defaultLithophanePhotoParams
+  const [params, setParams] = useState<LithophaneParams>(
+    defaultLithophaneParams
   )
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [showOptions, setShowOptions] = useState<boolean>(false)
 
-  const handleInputChange = (
-    key: keyof LithophanePhotoParams,
-    value: number
-  ) => {
-    setParams((prevParams: LithophanePhotoParams) => ({
-      ...prevParams,
-      [key]: value,
-    }))
-  }
-
   const handleImageDataChange = (imageData: string) => {
-    setParams((prevParams: LithophanePhotoParams) => ({
+    setParams((prevParams: LithophaneParams) => ({
       ...prevParams,
       imageData: imageData,
     }))
@@ -62,8 +52,8 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ setStlUrl }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="h-full flex flex-col gap-4 border">
-      <div className="flex-grow">
+    <form onSubmit={handleSubmit} className="h-full flex flex-col gap-4">
+      <div className="flex-grow flex flex-col gap-4">
         <PhotoUploader onImageDataChange={handleImageDataChange} />
 
         <button
@@ -75,68 +65,19 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ setStlUrl }) => {
         </button>
 
         {showOptions && (
-          <div className="max-h-80 overflow-y-auto p-4 border-t border-gray-300">
-            {Object.keys(params).map((key) => {
-              if (key !== "imageData") {
-                const min =
-                  minMaxLithophanePhoto[
-                    key as keyof typeof minMaxLithophanePhoto
-                  ]?.min || 0
-                const max =
-                  minMaxLithophanePhoto[
-                    key as keyof typeof minMaxLithophanePhoto
-                  ]?.max || 100
-                const value = params[
-                  key as keyof LithophanePhotoParams
-                ] as number
-
-                return (
-                  <div
-                    key={key}
-                    className="flex flex-col sm:flex-row sm:items-center mb-4"
-                  >
-                    <label className="sm:w-1/3 sm:text-right pr-2">
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                    </label>
-                    <div className="flex flex-col sm:w-2/3 items-center">
-                      <input
-                        type="number"
-                        min={min}
-                        max={max}
-                        value={value}
-                        onChange={(e) =>
-                          handleInputChange(
-                            key as keyof LithophanePhotoParams,
-                            parseFloat(e.target.value)
-                          )
-                        }
-                        className="mb-2 w-full"
-                      />
-                      <input
-                        type="range"
-                        min={min}
-                        max={max}
-                        value={value}
-                        onChange={(e) =>
-                          handleInputChange(
-                            key as keyof LithophanePhotoParams,
-                            parseFloat(e.target.value)
-                          )
-                        }
-                        className="w-full"
-                      />
-                    </div>
-                  </div>
-                )
-              }
-              return null
-            })}
-          </div>
+          <OptionsDropdown type="photo" params={params} setParams={setParams} />
         )}
       </div>
-      <button type="submit" disabled={loading} className="default-button">
-        {loading ? "Generating..." : "Generate Lithophane"}
-      </button>
+
+      {params.imageData ? (
+        <button type="submit" disabled={loading} className="default-button">
+          {loading ? "Generating..." : "Generate Lithophane"}
+        </button>
+      ) : (
+        <button className="disabled-button" disabled>
+          Generate Lithophane
+        </button>
+      )}
 
       {error && (
         <div>
